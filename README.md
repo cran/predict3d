@@ -1,13 +1,21 @@
 R package predict3d <img src="inst/figures/imgfile.png" align="right" height="120" width="103.6"/>
 =======================================================================================
-
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/predict3d)](https://cran.r-project.org/package=predict3d)
+[![Total
+Downloads](https://cranlogs.r-pkg.org/badges/grand-total/predict3d)](https://cran.r-project.org/package=predict3d)
 
 
 R package `predict3d` aims to draw predicts plot for various regression models. The main two functions are ggPredict() for 2-dimensional plot and predict3d() for 3-dimensional plot.
 
 ## Package Installation
 
-You can install `predict3d` package from github.
+You can install `predict3d` package from CRAN.
+
+```r
+install.packages("predict3d")
+```
+
+You can install the developmental version of `predict3d` package from github.
 
 
 ```r
@@ -136,3 +144,8 @@ rgl.postscript("fig2.pdf","pdf")
 
 For more information about package `rgl`, please read the package vignette at: https://CRAN.R-project.org/package=rgl/vignettes/rgl.html
 
+You can see the following vignettes published on rpubs.com
+
+[Drawing the multiple regression models(Part I)](http://rpubs.com/cardiomoon/474707)
+
+[Part II. Transforming variables](http://rpubs.com/cardiomoon/475466)

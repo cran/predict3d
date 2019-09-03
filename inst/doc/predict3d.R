@@ -2,9 +2,14 @@
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = NA,
-  fig.height=7,
-  fig.width=7
+  fig.height=6,
+  fig.width=6,
+  out.width="70%",
+  fig.align="center"
 )
+
+## ----eval=FALSE----------------------------------------------------------
+#  install.packages("predict3d")
 
 ## ----eval=FALSE----------------------------------------------------------
 #  if(!require(devtools)) install.packages("devtools")

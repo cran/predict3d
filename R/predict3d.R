@@ -61,6 +61,10 @@ rank2colors=function(x,palette="Blues",reverse=TRUE,color="red"){
 #'@param pred The name of predictor variable
 #'@param modx Optional. The name of moderator variable
 #'@param mod2 Optional. The name of second moderator variable
+#'@param dep Optional. The name of dependent variable
+#'@param xlab  x-axis label.
+#'@param ylab y-axis label.
+#'@param zlab z-axis label.
 #' @param width the width of device
 #' @param colorn An integer giving the desired number of intervals. Non-integer values are rounded down.
 #' @param maxylev Maximal length of unique values of y axis variable to be treated as a categorical variable.
@@ -79,6 +83,7 @@ rank2colors=function(x,palette="Blues",reverse=TRUE,color="red"){
 #' @param show.plane Logical. If true, show regression plane
 #' @param plane.color Name of color of regression plane
 #' @param plane.alpha Transparency scale of regression plane
+#' @param summarymode  An integer indicating method of extracting typical value of variables. If 1, typical() is used.If 2, mean() is used.
 #' @param ... additional parameters which will be passed to plot3d
 #'
 #' @importFrom rgl open3d next3d surface3d plot3d lines3d mfrow3d bg3d legend3d rglwidget axis3d par3d rgl.bg segments3d rgl.bringtotop rgl.clear
@@ -92,6 +97,8 @@ rank2colors=function(x,palette="Blues",reverse=TRUE,color="red"){
 #' @examples
 #'fit=lm(mpg~hp*wt,data=mtcars)
 #'predict3d(fit,show.error=TRUE)
+#'fit=lm(log(mpg)~hp*wt,data=mtcars)
+#'predict3d(fit,dep=mpg)
 #'\donttest{
 #'fit=lm(Sepal.Length~Sepal.Width*Species,data=iris)
 #'predict3d(fit,radius=0.05)
@@ -104,12 +111,13 @@ rank2colors=function(x,palette="Blues",reverse=TRUE,color="red"){
 #'fit=loess(mpg~hp*wt,data=mtcars)
 #'predict3d(fit,radius=4)
 #'}
-predict3d=function (fit, pred=NULL,modx=NULL,mod2=NULL,
+predict3d=function (fit, pred=NULL,modx=NULL,mod2=NULL,dep=NULL,
+                    xlab=NULL,ylab=NULL,zlab=NULL,
                     width=640,colorn = 20, maxylev=6, se = FALSE,
           show.summary = FALSE, overlay=NULL,show.error=FALSE,
           show.legend=FALSE,bg=NULL,type="s",radius=2,palette=NULL,palette.reverse=TRUE,
           color="red",show.subtitle=TRUE,
-          show.plane=TRUE,plane.color="steelblue",plane.alpha=0.5,...)
+          show.plane=TRUE,plane.color="steelblue",plane.alpha=0.5,summarymode=1,...)
 {
 
    # tm=ifelse(mtcars$am==0,"automatic","manual")
@@ -181,6 +189,27 @@ predict3d=function (fit, pred=NULL,modx=NULL,mod2=NULL,
                facetname<-NULL
           }
      }
+     depc<-quo_name(enexpr(dep))
+     if(depc!="NULL"){
+          yname=depc
+     }
+
+     predictors=c(xname,colorname,facetname)
+     if(checkVarname){
+          predictors=unique(restoreNames(predictors))
+          xname<-colorname<-facetname<-NULL
+          xname<-predictors[1]
+          if(length(predictors)>1){
+               colorname=predictors[2]
+          } else{
+               colorname=names(fit$model)[5]
+          }
+          if(length(predictors)>2){
+               facetname=predictors[3]
+          }
+          predictors=c(xname,colorname,facetname)
+          # cat("predictors=",predictors,"\n")
+     }
 
 
      data=restoreData(rawdata)
@@ -212,11 +241,7 @@ predict3d=function (fit, pred=NULL,modx=NULL,mod2=NULL,
    }
 
 
-
-
-   predictors=c(xname,colorname,facetname)
-  # cat("predictors=",predictors)
-   newdata2=fit2newdata(fit,predictors,mode=3,colorn=colorn,maxylev=maxylev)
+   newdata2=fit2newdata(fit,predictors,mode=3,colorn=colorn,maxylev=maxylev,summarymode=summarymode)
   newdata2
    colorcount = length(unique(newdata2[[colorname]]))
    facetcount = ifelse(is.null(facetname),0,length(unique(newdata2[[facetname]])))
@@ -274,12 +299,16 @@ predict3d=function (fit, pred=NULL,modx=NULL,mod2=NULL,
                           Reduce(paste0,deparse(fit$call)),
                           paste0("Analysis assuming ",attr(newdata2,"caption"))),"")
 
+   if(is.null(xlab))  xlab=xname
+   if(is.null(ylab))  ylab=colorname
+   if(is.null(zlab))  zlab=yname
+
    if(is.null(facetname)) {
          if(!colorFactor){  ## Numeric
 
             plot3d(data[[xname]],data[[colorname]],data[[yname]],col=data$color,
                    type=type,radius=myradius,
-                   xlab=xname,ylab=colorname,zlab=yname,xlim=myxlim,ylim=myylim,zlim=myzlim,
+                   xlab=xlab,ylab=ylab,zlab=zlab,xlim=myxlim,ylim=myylim,zlim=myzlim,
                    sub=subtitle)
 
             if(show.error){
@@ -308,7 +337,7 @@ predict3d=function (fit, pred=NULL,modx=NULL,mod2=NULL,
             if(overlay) {
             plot3d(data[[xname]],data$color,data[[yname]],col=data$colorn,
                    type=type,radius=myradius,
-                   xlab=xname,ylab=colorname,zlab=yname,xlim=myxlim,ylim=myylim,zlim=myzlim,
+                   xlab=xlab,ylab=ylab,zlab=zlab,xlim=myxlim,ylim=myylim,zlim=myzlim,
                    sub=subtitle,...)
                  # plot3d(data[[xname]],data$color,data[[yname]],col=data$colorn,
                  #        type=type,radius=myradius,
@@ -373,7 +402,7 @@ predict3d=function (fit, pred=NULL,modx=NULL,mod2=NULL,
                if(!overlay) {
                   data1=data[data[[colorname]]==sort(unique(data[[colorname]]))[i],]
                   plot3d(data1[[xname]],data1$color,data1[[yname]],
-                         xlab=xname,ylab=colorname,zlab=yname,
+                         xlab=xlab,ylab=ylab,zlab=zlab,
                          type=type,col=i,radius=myradius,
                          xlim=myxlim,ylim=myylim,zlim=myzlim,
                          sub=paste0(colorname,":",sort(unique(data[[colorname]]))[i]),...)
@@ -432,7 +461,7 @@ predict3d=function (fit, pred=NULL,modx=NULL,mod2=NULL,
       if(overlay)  {
          plot3d(data[[xname]],data[[colorname]],data[[yname]],col=data$color,
                 type=type,radius=myradius,
-                xlab=xname,ylab=colorname,zlab=yname,xlim=myxlim,ylim=myylim,zlim=myzlim,
+                xlab=xlab,ylab=ylab,zlab=zlab,xlim=myxlim,ylim=myylim,zlim=myzlim,
                 sub=subtitle,...)
            if(show.error){
                 segments3d(as.vector(t(data[c(xname,xname)])),
@@ -461,7 +490,7 @@ predict3d=function (fit, pred=NULL,modx=NULL,mod2=NULL,
 
 
             plot3d(data1[[xname]],data1[[colorname]],data1[[yname]],
-                   xlab=xname,ylab=colorname,zlab=yname,
+                   xlab=xlab,ylab=ylab,zlab=zlab,
                    type=type,col=data1$color,radius=myradius,
                    xlim=myxlim,ylim=myylim,zlim=myzlim,
                    sub=paste0(facetname,":",unique(data[[facetname]])[i]),...)

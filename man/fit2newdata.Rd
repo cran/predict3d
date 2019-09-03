@@ -5,14 +5,15 @@
 \title{Make a new data set for prediction}
 \usage{
 fit2newdata(fit, predictors, mode = 1, pred.values = NULL,
-  modx.values = NULL, mod2.values = NULL, colorn = 3, maxylev = 6)
+  modx.values = NULL, mod2.values = NULL, colorn = 3, maxylev = 6,
+  summarymode = 1)
 }
 \arguments{
 \item{fit}{An object of class "lm", "glm" or "loess"}
 
 \item{predictors}{Names of predictor variables in string}
 
-\item{mode}{A numeric. Useful when the variables are numeric. If 1, c(-1,0,1)*sd + mean is used. If 2, the 14th, 50th, 86th percentile values used. If 3 sequence over a the range of a vector used}
+\item{mode}{A numeric. Useful when the variables are numeric. If 1, c(-1,0,1)*sd + mean is used. If 2, the 16th, 50th, 84th percentile values used. If 3 sequence over a the range of a vector used}
 
 \item{pred.values}{For which values of the predictors should be used? Default is NULL. If NULL, 20 seq_range is used.}
 
@@ -23,6 +24,8 @@ fit2newdata(fit, predictors, mode = 1, pred.values = NULL,
 \item{colorn}{The number of regression lines when the modifier variable(s) are numeric.}
 
 \item{maxylev}{An integer indicating the maximum number of levels of numeric variable be treated as a categorical variable}
+
+\item{summarymode}{An integer indicating method of extracting typical value of variables. If 1, typical() is used.If 2, mean() is used.}
 }
 \description{
 Make a new data set for prediction
@@ -32,6 +35,7 @@ fit=lm(mpg~hp*wt*cyl+carb+am,data=mtcars)
 fit2newdata(fit,predictors=c("hp","wt","am"))
 fit2newdata(fit,predictors=c("hp","wt","cyl"))
 fit2newdata(fit,predictors=c("hp"))
+fit2newdata(fit,predictors=c("hp","wt"))
 fit=loess(mpg~hp*wt*am,data=mtcars)
 fit2newdata(fit,predictors=c("hp"))
 \donttest{
@@ -43,5 +47,10 @@ fit2newdata(fit,predictors=c("wt","vs"))
 fit2newdata(lm(mpg~hp*wt,data=mtcars),predictors=c("hp","wt"),mode=3,colorn=30)
 fit=lm(mpg~hp*log(wt),data=mtcars)
 fit2newdata(fit,predictors=c("hp","log(wt)"))
+fit=lm(mpg~hp*wt*factor(vs),data=mtcars)
+fit2newdata(fit,predictors=c("hp"))
+require(moonBook)
+fit=lm(log(NTAV)~I(age^2)*sex,data=radial)
+fit2newdata(fit,predictors=c("I(age^2)","sex"))
 }
 }

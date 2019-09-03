@@ -5,12 +5,15 @@
 \title{Visualize predictions from the multiple regression models.}
 \usage{
 ggPredict(fit, pred = NULL, modx = NULL, mod2 = NULL,
-  modx.values = NULL, mod2.values = NULL, mode = 1, colorn = 3,
-  maxylev = 6, show.point = TRUE, show.error = FALSE,
-  jitter = NULL, se = FALSE, alpha = 0.1, show.text = TRUE,
+  modx.values = NULL, mod2.values = NULL, dep = NULL, mode = 1,
+  colorn = 3, maxylev = 6,
+  show.point = getOption("ggPredict.show.point", TRUE),
+  show.error = FALSE, error.color = "red", jitter = NULL,
+  se = FALSE, alpha = 0.1, show.text = TRUE,
   add.modx.values = TRUE, add.loess = FALSE, labels = NULL,
   angle = NULL, xpos = NULL, vjust = NULL, digits = 2,
-  facet.modx = FALSE, facetbycol = TRUE, plot = TRUE, ...)
+  facet.modx = FALSE, facetbycol = TRUE, plot = TRUE,
+  summarymode = 1, ...)
 }
 \arguments{
 \item{fit}{An object of class "lm" or "glm"}
@@ -25,6 +28,8 @@ ggPredict(fit, pred = NULL, modx = NULL, mod2 = NULL,
 
 \item{mod2.values}{For which values of the second moderator should lines be plotted? Default is NULL. If NULL, then the customary +/- 1 standard deviation from the mean as well as the mean itself are used for continuous moderators. If the moderator is a factor variable and modx.values is NULL, each level of the factor is included.}
 
+\item{dep}{Optional. The name of dependent variable}
+
 \item{mode}{A  numeric. Useful when the variables are numeric. If 1, c(-1,0,1)*sd + mean is used. If 2, the 14th, 50th, 86th percentile values used. If 3 sequence over a the range of a vector used}
 
 \item{colorn}{The number of regression lines when the modifier variable(s) are numeric.}
@@ -34,6 +39,8 @@ ggPredict(fit, pred = NULL, modx = NULL, mod2 = NULL,
 \item{show.point}{Logical. Whether or not add points}
 
 \item{show.error}{Logical. Whether or not show error}
+
+\item{error.color}{color of error. dafault value is "red"}
 
 \item{jitter}{logical Whether or not use geom_jitter}
 
@@ -63,6 +70,8 @@ ggPredict(fit, pred = NULL, modx = NULL, mod2 = NULL,
 
 \item{plot}{Logical. Should a plot of the results be printed? Default is TRUE.}
 
+\item{summarymode}{An integer indicating method of extracting typical value of variables. If 1, typical() is used.If 2, mean() is used.}
+
 \item{...}{additional arguments to be passed to geom_text}
 }
 \description{
@@ -72,13 +81,15 @@ Visualize predictions from the multiple regression models.
 fit=loess(mpg~hp*wt*am,data=mtcars)
 ggPredict(fit)
 ggPredict(fit,hp)
+\donttest{
 ggPredict(fit,hp,wt)
 fit=lm(mpg~hp*wt,data=mtcars)
 ggPredict(fit)
 ggPredict(fit,labels=paste0("label",1:3),xpos=c(0.3,0.6,0.4))
 ggPredict(fit,se=TRUE)
 ggPredict(fit,mode=3,colorn=40,show.text=FALSE)
-\donttest{
+fit=lm(log(mpg)~hp*wt,data=mtcars)
+ggPredict(fit,dep=mpg)
 fit=lm(mpg~hp*wt*cyl,data=mtcars)
 ggPredict(fit,modx=wt,modx.values=c(2,3,4,5),mod2=cyl,show.text=FALSE)
 ggPredict(fit,hp,wt,show.point=FALSE,se=TRUE,xpos=0.5)
@@ -98,5 +109,10 @@ fit2=glm(cens~pnodes*age*horTh,data=GBSG2,family=binomial)
 ggPredict(fit2,pred=pnodes,modx=age,mod2=horTh,mode=3,colorn=10,show.text=FALSE)
 fit=lm(mpg~log(hp)*wt,data=mtcars)
 ggPredict(fit,hp,wt)
+fit=lm(mpg~hp*wt+disp+gear+carb+am,data=mtcars)
+ggPredict(fit,disp,gear,am)
+fit=lm(weight~I(height^3)+I(height^2)+height+sex,data=radial)
+ggPredict(fit)
+predict3d(fit)
 }
 }
