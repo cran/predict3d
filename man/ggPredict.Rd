@@ -4,16 +4,37 @@
 \alias{ggPredict}
 \title{Visualize predictions from the multiple regression models.}
 \usage{
-ggPredict(fit, pred = NULL, modx = NULL, mod2 = NULL,
-  modx.values = NULL, mod2.values = NULL, dep = NULL, mode = 1,
-  colorn = 3, maxylev = 6,
+ggPredict(
+  fit,
+  pred = NULL,
+  modx = NULL,
+  mod2 = NULL,
+  modx.values = NULL,
+  mod2.values = NULL,
+  dep = NULL,
+  mode = 1,
+  colorn = 3,
+  maxylev = 6,
   show.point = getOption("ggPredict.show.point", TRUE),
-  show.error = FALSE, error.color = "red", jitter = NULL,
-  se = FALSE, alpha = 0.1, show.text = TRUE,
-  add.modx.values = TRUE, add.loess = FALSE, labels = NULL,
-  angle = NULL, xpos = NULL, vjust = NULL, digits = 2,
-  facet.modx = FALSE, facetbycol = TRUE, plot = TRUE,
-  summarymode = 1, ...)
+  show.error = FALSE,
+  error.color = "red",
+  jitter = NULL,
+  se = FALSE,
+  alpha = 0.1,
+  show.text = TRUE,
+  add.modx.values = TRUE,
+  add.loess = FALSE,
+  labels = NULL,
+  angle = NULL,
+  xpos = NULL,
+  vjust = NULL,
+  digits = 2,
+  facet.modx = FALSE,
+  facetbycol = TRUE,
+  plot = TRUE,
+  summarymode = 1,
+  ...
+)
 }
 \arguments{
 \item{fit}{An object of class "lm" or "glm"}
@@ -81,8 +102,10 @@ Visualize predictions from the multiple regression models.
 fit=loess(mpg~hp*wt*am,data=mtcars)
 ggPredict(fit)
 ggPredict(fit,hp)
-\donttest{
+\dontrun{
 ggPredict(fit,hp,wt)
+fit=lm(mpg~wt*hp-1,data=mtcars)
+ggPredict(fit,xpos=0.7)
 fit=lm(mpg~hp*wt,data=mtcars)
 ggPredict(fit)
 ggPredict(fit,labels=paste0("label",1:3),xpos=c(0.3,0.6,0.4))
@@ -111,6 +134,7 @@ fit=lm(mpg~log(hp)*wt,data=mtcars)
 ggPredict(fit,hp,wt)
 fit=lm(mpg~hp*wt+disp+gear+carb+am,data=mtcars)
 ggPredict(fit,disp,gear,am)
+library(moonBook)
 fit=lm(weight~I(height^3)+I(height^2)+height+sex,data=radial)
 ggPredict(fit)
 predict3d(fit)

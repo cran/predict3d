@@ -4,14 +4,36 @@
 \alias{predict3d}
 \title{Draw 3d predict plot using package `rgl`}
 \usage{
-predict3d(fit, pred = NULL, modx = NULL, mod2 = NULL, dep = NULL,
-  xlab = NULL, ylab = NULL, zlab = NULL, width = 640,
-  colorn = 20, maxylev = 6, se = FALSE, show.summary = FALSE,
-  overlay = NULL, show.error = FALSE, show.legend = FALSE,
-  bg = NULL, type = "s", radius = 2, palette = NULL,
-  palette.reverse = TRUE, color = "red", show.subtitle = TRUE,
-  show.plane = TRUE, plane.color = "steelblue", plane.alpha = 0.5,
-  summarymode = 1, ...)
+predict3d(
+  fit,
+  pred = NULL,
+  modx = NULL,
+  mod2 = NULL,
+  dep = NULL,
+  xlab = NULL,
+  ylab = NULL,
+  zlab = NULL,
+  width = 640,
+  colorn = 20,
+  maxylev = 6,
+  se = FALSE,
+  show.summary = FALSE,
+  overlay = NULL,
+  show.error = FALSE,
+  show.legend = FALSE,
+  bg = NULL,
+  type = "s",
+  radius = NULL,
+  palette = NULL,
+  palette.reverse = TRUE,
+  color = "red",
+  show.subtitle = TRUE,
+  show.plane = TRUE,
+  plane.color = "steelblue",
+  plane.alpha = 0.5,
+  summarymode = 1,
+  ...
+)
 }
 \arguments{
 \item{fit}{A model object for which prediction is desired.}
@@ -78,16 +100,22 @@ fit=lm(mpg~hp*wt,data=mtcars)
 predict3d(fit,show.error=TRUE)
 fit=lm(log(mpg)~hp*wt,data=mtcars)
 predict3d(fit,dep=mpg)
-\donttest{
+\dontrun{
 fit=lm(Sepal.Length~Sepal.Width*Species,data=iris)
-predict3d(fit,radius=0.05)
+predict3d(fit)
 require(TH.data)
 fit=glm(cens~pnodes*age*horTh,data=GBSG2,family=binomial)
 predict3d(fit)
 mtcars$engine=ifelse(mtcars$vs==0,"V-shaped","straight")
 fit=lm(mpg~wt*engine,data=mtcars)
-predict3d(fit,radius=0.5)
+predict3d(fit)
 fit=loess(mpg~hp*wt,data=mtcars)
 predict3d(fit,radius=4)
+states<-as.data.frame(state.x77[,c("Murder","Population","Illiteracy","Income","Frost")])
+fit=lm(Murder~Population+Illiteracy,data=states)
+predict3d(fit)
+predict3d(fit,radius=200)
+fit=lm(mpg~cyl+hp+am,data=mtcars)
+predict3d(fit)
 }
 }

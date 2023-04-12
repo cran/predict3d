@@ -4,9 +4,17 @@
 \alias{fit2newdata}
 \title{Make a new data set for prediction}
 \usage{
-fit2newdata(fit, predictors, mode = 1, pred.values = NULL,
-  modx.values = NULL, mod2.values = NULL, colorn = 3, maxylev = 6,
-  summarymode = 1)
+fit2newdata(
+  fit,
+  predictors,
+  mode = 1,
+  pred.values = NULL,
+  modx.values = NULL,
+  mod2.values = NULL,
+  colorn = 3,
+  maxylev = 6,
+  summarymode = 1
+)
 }
 \arguments{
 \item{fit}{An object of class "lm", "glm" or "loess"}
@@ -38,7 +46,7 @@ fit2newdata(fit,predictors=c("hp"))
 fit2newdata(fit,predictors=c("hp","wt"))
 fit=loess(mpg~hp*wt*am,data=mtcars)
 fit2newdata(fit,predictors=c("hp"))
-\donttest{
+\dontrun{
 mtcars$engine=ifelse(mtcars$vs==0,"V-shaped","straight")
 fit=lm(mpg~wt*engine,data=mtcars)
 fit2newdata(fit,predictors=c("wt","engine"))
@@ -49,8 +57,8 @@ fit=lm(mpg~hp*log(wt),data=mtcars)
 fit2newdata(fit,predictors=c("hp","log(wt)"))
 fit=lm(mpg~hp*wt*factor(vs),data=mtcars)
 fit2newdata(fit,predictors=c("hp"))
+}
 require(moonBook)
 fit=lm(log(NTAV)~I(age^2)*sex,data=radial)
 fit2newdata(fit,predictors=c("I(age^2)","sex"))
-}
 }

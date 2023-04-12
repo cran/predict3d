@@ -86,7 +86,7 @@ rank2colors=function(x,palette="Blues",reverse=TRUE,color="red"){
 #' @param summarymode  An integer indicating method of extracting typical value of variables. If 1, typical() is used.If 2, mean() is used.
 #' @param ... additional parameters which will be passed to plot3d
 #'
-#' @importFrom rgl open3d next3d surface3d plot3d lines3d mfrow3d bg3d legend3d rglwidget axis3d par3d rgl.bg segments3d rgl.bringtotop rgl.clear
+#' @importFrom rgl open3d next3d surface3d plot3d lines3d mfrow3d bg3d legend3d rglwidget axis3d par3d segments3d rgl.bringtotop clear3d
 #' @importFrom grDevices xyz.coords
 #' @importFrom tidyr spread
 #' @importFrom dplyr select
@@ -99,45 +99,46 @@ rank2colors=function(x,palette="Blues",reverse=TRUE,color="red"){
 #'predict3d(fit,show.error=TRUE)
 #'fit=lm(log(mpg)~hp*wt,data=mtcars)
 #'predict3d(fit,dep=mpg)
-#'\donttest{
+#'\dontrun{
 #'fit=lm(Sepal.Length~Sepal.Width*Species,data=iris)
-#'predict3d(fit,radius=0.05)
+#'predict3d(fit)
 #'require(TH.data)
 #'fit=glm(cens~pnodes*age*horTh,data=GBSG2,family=binomial)
 #'predict3d(fit)
 #' mtcars$engine=ifelse(mtcars$vs==0,"V-shaped","straight")
 #' fit=lm(mpg~wt*engine,data=mtcars)
-#' predict3d(fit,radius=0.5)
+#' predict3d(fit)
 #'fit=loess(mpg~hp*wt,data=mtcars)
 #'predict3d(fit,radius=4)
+#'states<-as.data.frame(state.x77[,c("Murder","Population","Illiteracy","Income","Frost")])
+#'fit=lm(Murder~Population+Illiteracy,data=states)
+#'predict3d(fit)
+#'predict3d(fit,radius=200)
+#'fit=lm(mpg~cyl+hp+am,data=mtcars)
+#'predict3d(fit)
 #'}
 predict3d=function (fit, pred=NULL,modx=NULL,mod2=NULL,dep=NULL,
                     xlab=NULL,ylab=NULL,zlab=NULL,
                     width=640,colorn = 20, maxylev=6, se = FALSE,
           show.summary = FALSE, overlay=NULL,show.error=FALSE,
-          show.legend=FALSE,bg=NULL,type="s",radius=2,palette=NULL,palette.reverse=TRUE,
+          show.legend=FALSE,bg=NULL,type="s",radius=NULL,palette=NULL,palette.reverse=TRUE,
           color="red",show.subtitle=TRUE,
           show.plane=TRUE,plane.color="steelblue",plane.alpha=0.5,summarymode=1,...)
 {
 
-   # tm=ifelse(mtcars$am==0,"automatic","manual")
+     # pred=NULL;modx=NULL;mod2=NULL;dep=NULL
+     # xlab=NULL;ylab=NULL;zlab=NULL
+     # width=640;colorn = 20; maxylev=6; se = FALSE
+     # show.summary = FALSE; overlay=NULL;show.error=FALSE
+     # show.legend=FALSE;bg=NULL;type="s";radius=2
+     # palette=NULL;palette.reverse=TRUE;color="red"
+     # show.plane=TRUE;plane.color="steelblue";plane.alpha=0.5;
+     # show.subtitle=TRUE;summarymode=1;radius=200
+     # require(rlang);require(tidyverse);require(rgl)
 
-   #   mtcars$engine=ifelse(mtcars$vs==0,"V-shaped","straight")
-   #   fit=lm(mpg~wt*engine,data=mtcars)
-   #  fit=lm(govact~negemot*age+posemot+ideology+sex,data=glbwarm)
-   # fit=lm(mpg~hp*wt,data=mtcars)
-   #
-   #  xname="hp"
-   #  colorname="wt"
-   #  facetname=NULL
-   #  colorn = 20; maxylev=6; se = FALSE;
-   # show.summary = FALSE; overlay=NULL;
-   # show.legend=FALSE;bg=NULL;type="s";radius=1
-   # palette="Blues";palette.reverse=TRUE
-   # show.plane=TRUE;plane.color="blue";plane.alpha=0.2;
-   # show.subtitle=FALSE;width=640;bg="white"
-
-
+     if(is.null(radius)){
+        radius=max(fit$model[sapply(fit$model,is.numeric)],na.rm=TRUE)/100
+     }
      myradius=radius
 
      method=class(fit)[1]
@@ -179,6 +180,7 @@ predict3d=function (fit, pred=NULL,modx=NULL,mod2=NULL,dep=NULL,
      colorname=restoreNames(colorname)
 
      facetname <- quo_name(enexpr(mod2))
+     facetname
      mod2<-enquo(mod2)
      if(facetname=="NULL"){
           if(checkVarname & ncol(rawdata)>3){
@@ -277,8 +279,8 @@ predict3d=function (fit, pred=NULL,modx=NULL,mod2=NULL,dep=NULL,
    }
    par3d(windowRect = 50 + c( 0, 0, width, width ) )
    rgl.bringtotop()
-   if(!is.null(bg)) rgl.bg(color = bg)
-   rgl.clear(type = c("shapes", "bboxdeco"))
+   if(!is.null(bg)) bg3d(color = bg)
+   clear3d(type = c("shapes", "bboxdeco"))
    rgl.bringtotop()
 
 
