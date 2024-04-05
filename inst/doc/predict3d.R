@@ -33,7 +33,7 @@ predict3d(fit2,radius=3,palette=NULL,show.error=TRUE)
 rglwidget(elementId = "2nd")
 
 
-## ---- fig.height=5,fig.width=8,message=FALSE,warning=FALSE--------------------
+## ----fig.height=5,fig.width=8,message=FALSE,warning=FALSE---------------------
 require(TH.data)
 fit3=glm(cens~pnodes*age*horTh,data=GBSG2,family=binomial)
 ggPredict(fit3,se=TRUE,show.text = FALSE)
@@ -58,7 +58,7 @@ rglwidget(elementId = "4th")
 #  rgl.snapshot("fig1.png")
 #  rgl.postscript("fig2.pdf","pdf")
 
-## ---- eval=FALSE--------------------------------------------------------------
+## ----eval=FALSE---------------------------------------------------------------
 #  movie3d(spin3d(axis = c(0, 0, 1)),dir=".", duration = 3,movie="movie")
 
 ## ----eval=FALSE---------------------------------------------------------------
