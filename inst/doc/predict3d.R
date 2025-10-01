@@ -9,11 +9,11 @@ knitr::opts_chunk$set(
 )
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  install.packages("predict3d")
+# install.packages("predict3d")
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  if(!require(devtools)) install.packages("devtools")
-#  devtools::install_github("cardiomoon/predict3d"")
+# if(!require(devtools)) install.packages("devtools")
+# devtools::install_github("cardiomoon/predict3d"")
 
 ## ----message=FALSE------------------------------------------------------------
 require(predict3d)
@@ -47,20 +47,20 @@ predict3d(fit,radius=3)
 rglwidget(elementId = "4th")
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  start <- proc.time()[3]
-#  while ((i <- 36*(proc.time()[3] - start)) < 360) {
-#       view3d(i, i/4);
-#  }
-#  play3d(spin3d(axis = c(1, 0, 0), rpm = 30), duration = 2)
+# start <- proc.time()[3]
+# while ((i <- 36*(proc.time()[3] - start)) < 360) {
+#      view3d(i, i/4);
+# }
+# play3d(spin3d(axis = c(1, 0, 0), rpm = 30), duration = 2)
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  rgl.bringtotop()
-#  rgl.snapshot("fig1.png")
-#  rgl.postscript("fig2.pdf","pdf")
+# rgl.bringtotop()
+# rgl.snapshot("fig1.png")
+# rgl.postscript("fig2.pdf","pdf")
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  movie3d(spin3d(axis = c(0, 0, 1)),dir=".", duration = 3,movie="movie")
+# movie3d(spin3d(axis = c(0, 0, 1)),dir=".", duration = 3,movie="movie")
 
 ## ----eval=FALSE---------------------------------------------------------------
-#  writeWebGL(filename = "index.html")
+# writeWebGL(filename = "index.html")
 
